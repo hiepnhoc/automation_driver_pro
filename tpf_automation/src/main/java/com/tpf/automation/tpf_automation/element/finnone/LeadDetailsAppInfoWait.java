@@ -265,7 +265,8 @@ public class LeadDetailsAppInfoWait {
     }
 
     public void btnMiscFpt(String stage, String value) {
-        SeleniumUtils.clickableById(driver,customerErrorResponse,"applicationChildTabs_miscDynamicForm_1",stage,value).click();
+        //SeleniumUtils.clickableById(driver,customerErrorResponse,"applicationChildTabs_miscDynamicForm_1",stage,value).click();
+        SeleniumUtils.findByXpath(driver,customerErrorResponse,"//ul[@id='applicationChildTabs']/li/a[contains(@onclick,'FPT')]",stage,value).click();
     }
 
     public void btnLoanDetails(String stage, String value) {
@@ -277,7 +278,8 @@ public class LeadDetailsAppInfoWait {
     }
 
     public void btnMiscAppDtl(String stage, String value) {
-        SeleniumUtils.clickableById(driver,customerErrorResponse,"applicationChildTabs_miscDynamicForm_0",stage,value).click();
+        //SeleniumUtils.clickableById(driver,customerErrorResponse,"applicationChildTabs_miscDynamicForm_0",stage,value).click();
+        SeleniumUtils.findByXpath(driver,customerErrorResponse,"//ul[@id='applicationChildTabs']/li/a[contains(@onclick,'frmAppDtl')]",stage,value).click();
     }
 
 }

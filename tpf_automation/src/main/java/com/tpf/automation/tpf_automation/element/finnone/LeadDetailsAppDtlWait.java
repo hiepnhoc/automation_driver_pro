@@ -30,7 +30,8 @@ public class LeadDetailsAppDtlWait {
         //test = Arrays.asList("Education, sports","0","0","Rented","1111111111111111","FPT000001","62");
 
         SeleniumUtils.findByID(driver,customerErrorResponse,"loanpurpose_frmAppDtl_0_chzn",stage ,"click loan purpose").click();
-        SeleniumUtils.findByXpath(driver,customerErrorResponse,"//*[@id='loanpurpose_frmAppDtl_0_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(0) + "']",stage ,test.get(0)).click();
+        SeleniumUtils.findByXpath(driver,customerErrorResponse,"//*[@id='loanpurpose_frmAppDtl_0_chzn" +
+                "']//li[contains(@class, 'active-result') and text() = '" + test.get(0) + "']",stage ,test.get(0)).click();
 
         //SeleniumUtils.findByID(driver,customerErrorResponse,"householdmembers_frmAppDtl_1",stage ,test.get(1)).sendKeys(test.get(1));
         SeleniumUtils.sendKeys(SeleniumUtils.findByID(driver,customerErrorResponse,"householdmembers_frmAppDtl_1",stage ,test.get(1)),

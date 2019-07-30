@@ -37,7 +37,8 @@ public class AutomationConstant {
 
     public static List<FptCustomer> customerQueue = new ArrayList<>();
 
-    public static void initUser () {
+    public static void
+    initUser () {
         userId.add(user1);
         userId.add(user2);
         userId.add(user3);

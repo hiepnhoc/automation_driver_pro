@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,23 +21,29 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.tpf.automation.tpf_automation.AutomationConstant.*;
+import static org.awaitility.Awaitility.await;
 
 public class FptAutoNew {
-    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException, MalformedURLException {
+    private WebDriver driver;
+    private String browser;
+    private String baseUrl;
+    private String os;
+    private String hub;
+    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException, IOException {
 
         FptLoanDetail fptLoanDetail = fptCustomer.getLoanDetail();
         List<FptAddress> fptAddresses = fptCustomer.getAddresses();
         List<FptProductDetail> fptProductDetails = fptCustomer.getProductDetails();
         List<FptReference> fptReferences = fptCustomer.getReferences();
 
-//        //region OPEN WEB BROWSER
-        System.setProperty(driverProperty, driverPath);
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
-
-        //options.addArguments("window-size=700x1000");
-        options.addArguments(driverWindowSizeFpt);
-        WebDriver driver = new ChromeDriver(options);
+////        //region OPEN WEB BROWSER
+//        System.setProperty(driverProperty, driverPath);
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("headless");
+//
+//        //options.addArguments("window-size=700x1000");
+//        options.addArguments(driverWindowSizeFpt);
+//        WebDriver driver = new ChromeDriver(options);
 
 
         CustomerErrorResponse customerErrorResponse = new CustomerErrorResponse();
@@ -45,6 +52,34 @@ public class FptAutoNew {
         customerErrorResponse.setField1("UNKNOWN");
         customerErrorResponse.setField3(username);
 
+        String host = "localhost";
+        //String host = "172.18.0.2";
+
+        this.browser = "chrome";
+        this.os = os;
+        this.baseUrl = baseUrl;
+        this.hub = hub;
+
+//        Platform platform = Platform.fromString(os.toUpperCase());
+        if (browser.equalsIgnoreCase("chrome")) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("headless");
+            chromeOptions.addArguments("--incognito");
+//            chromeOptions.addArguments("start-maximized");
+            chromeOptions.addArguments("window-size=1800x3000");
+//            chromeOptions.setCapability("platform", platform);
+            //this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+//            firefoxOptions.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), firefoxOptions);
+        } else {
+            InternetExplorerOptions ieOption = new InternetExplorerOptions();
+//            ieOption.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), ieOption);
+        }
+        this.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         driver.get(finnOnePROD);
 
 
@@ -297,6 +332,25 @@ public class FptAutoNew {
 
         //endregion
         System.out.println(username + " EMPLOYMENT DETAILS DONE");
+
+        //region FINANCE DETAIL
+        List<FptIncomeDto> incomeDetailDTOList = new ArrayList<>();
+        FptIncomeDto incomeDetailDTO = FptIncomeDto.builder().incomeHead("Main Personal Income")
+                .frequency("Monthly")
+                .amount(String.valueOf(fptCustomer.getSalary()))
+                .percentage("100").build();
+        incomeDetailDTOList.add(incomeDetailDTO);
+
+        ApplicationInfoFinancialDetailsTab financialDetailsTab = new ApplicationInfoFinancialDetailsTab(driver);
+        financialDetailsTab.openIncomeDetailSection();
+        await("Load financial details - income details Section Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> financialDetailsTab.getIncomeDetailDivElement().isDisplayed());
+        financialDetailsTab.setIncomeDetailsData(incomeDetailDTOList);
+        //Utils.captureScreenShot(driver);
+//        financialDetailsTab.validInOutData(dataControl, applicationInfoValue.get("incomeDetails"));
+        financialDetailsTab.saveAndNext();
+
+        System.out.println(username + " EMPLOYMENT DETAILS : FINANCE DONE");
 
         /**
          * @param List<String> empDetails
