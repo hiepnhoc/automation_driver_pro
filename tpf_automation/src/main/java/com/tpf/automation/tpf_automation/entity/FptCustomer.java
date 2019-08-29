@@ -33,6 +33,7 @@ public class FptCustomer {
     private List<FptReference> references;
     private List<FptAddress> addresses;
     private List<FptProductDetail> productDetails;
+    private List<FptPhoto> photos;
     //endregion
 
     //region CONSTRUCTION
@@ -242,6 +243,14 @@ public class FptCustomer {
 
     public void setSalary(Long salary) {
         this.salary = salary;
+    }
+
+    public List<FptPhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<FptPhoto> photos) {
+        this.photos = photos;
     }
     //endregion
 }

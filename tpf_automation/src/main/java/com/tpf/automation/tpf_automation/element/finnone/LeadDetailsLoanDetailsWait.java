@@ -28,6 +28,7 @@ public class LeadDetailsLoanDetailsWait {
 
         SeleniumUtils.findByID(driver,customerErrorResponse,"channelId_chzn",stage ,"click choose channel").click();
         SeleniumUtils.findByXpath(driver,customerErrorResponse,"//*[@id='channelId_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(1) + "']",stage ,test.get(1)).click();
+        SeleniumUtils.findByXpath(driver,customerErrorResponse,"//*[@id='channelId_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(1) + "']",stage ,test.get(1)).click();
 
         //SeleniumUtils.findByID(driver,customerErrorResponse,"applicationFormNumber",stage ,test.get(2)).sendKeys(test.get(2));
         SeleniumUtils.sendKeys(SeleniumUtils.findByID(driver,customerErrorResponse,"applicationFormNumber",stage ,test.get(2)),

@@ -5,6 +5,7 @@ import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import com.tpf.automation.tpf_automation.utils.Utils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -69,7 +70,7 @@ public class FptAutoNew {
             chromeOptions.addArguments("window-size=1800x3000");
 //            chromeOptions.setCapability("platform", platform);
             //this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
-            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
 //            firefoxOptions.setCapability("platform", platform);
@@ -398,6 +399,26 @@ public class FptAutoNew {
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS",testLeadDetailsAppInfo);
         //endregion
         System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
+
+//        try {
+//            // ==========DOCUMENTS=================
+//            DocumentsPage documentsPage = new DocumentsPage(driver);
+//            await("Load document tab Timeout!").atMost(30, TimeUnit.SECONDS)
+//                    .until(() -> documentsPage.getTabDocumentsElement().isDisplayed() && documentsPage.getTabDocumentsElement().isEnabled());
+//            documentsPage.getTabDocumentsElement().click();
+//            await("Load document container Timeout!").atMost(30, TimeUnit.SECONDS)
+//                    .until(() -> documentsPage.getDocumentsContainerElement().isDisplayed());
+//            documentsPage.getBtnGetDocumentElement().click();
+//            await("Load document table Timeout!").atMost(30, TimeUnit.SECONDS)
+//                    .until(() -> documentsPage.getLendingTrElement().size() > 0);
+////            documentsPage.setData(documentsValue.get("urlPhoto"));
+//            documentsPage.setData(fptCustomer.getPhotos(),fptCustomer.getCustId().trim());
+//            Utils.captureScreenShot(driver);
+//            documentsPage.getBtnSubmitElement().click();
+//        }catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
 
         /**
          * @param List<String> test_ref

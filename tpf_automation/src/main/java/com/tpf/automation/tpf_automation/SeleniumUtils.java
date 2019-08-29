@@ -4,6 +4,7 @@ import com.tpf.automation.tpf_automation.entity.FptCustomer;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.fpt.FptAutoNew;
 import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
+import com.tpf.automation.tpf_automation.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -142,9 +143,10 @@ public class SeleniumUtils {
             Date date= new Date();
             long time = date.getTime();
             String timeStr = String.valueOf( time);
-            String nameFile = new String(AutomationConstant.pathCapture).replace("time_", timeStr);
+            //String nameFile = new String(AutomationConstant.pathCapture).replace("time_", timeStr);
             // now copy the  screenshot to desired location using copyFile //method
-            FileUtils.copyFile(src, new File(nameFile));
+            //FileUtils.copyFile(src, new File(nameFile));
+            FileUtils.copyFile(src, new File(Utils.SCREENSHOT_PRE_PATH_DOCKER+ System.currentTimeMillis() + Utils.SCREENSHOT_EXTENSION));
         }
 
         catch (IOException e)
