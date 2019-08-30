@@ -5,6 +5,7 @@ import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
 import com.tpf.automation.tpf_automation.utils.Utils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -53,6 +54,10 @@ public class FptAutoNew {
         customerErrorResponse.setField1("UNKNOWN");
         customerErrorResponse.setField3(username);
 
+        String stageError="";
+        try {
+
+
         String host = "localhost";
         //String host = "172.18.0.2";
 
@@ -97,12 +102,14 @@ public class FptAutoNew {
 
         //region LOAN CREATION
         //region CHOOSE PERSONAL LOAN
+            stageError="MAIN MENU" ;
         MainFptWait mainFptWait = new MainFptWait(driver,customerErrorResponse);
         mainFptWait.getMenuApplications("MAIN MENU","Click Open Main Menu").click();
         mainFptWait.getSubmenuPersonalLoan("MAIN MENU", "Click Choose Personal Loan").click();
         //endregion
 
         //region CREATE NEW APPLICATION
+            stageError="CREATE_NEW_PERSONAL_LOAN" ;
         CreatePersonalLoanWait createPersonalLoanWait = new CreatePersonalLoanWait(driver,customerErrorResponse);
         createPersonalLoanWait.getBtnCreateNewCustomer("CREATE_NEW_PERSONAL_LOAN", "CLICK TO CREATE PERSONAL LOAN").click();
         //endregion
@@ -123,6 +130,7 @@ public class FptAutoNew {
         //region BASIC INFORMATION
         //List<String> basicInformation = Arrays.asList("Female","MAI","THÀNH","NAM","22/05/1995","HÀ NỘI","Married","Highschool");
         //System.out.println("Quang: " + fptCustomer.getIssuePlace());
+            stageError="LEAD_DETAILS__APPLICANT_INFORMATION__PERSONAL_INFORMATION" ;
         List<String> basicInformation = Arrays.asList(fptCustomer.getGender(),fptCustomer.getFirstName(),fptCustomer.getLastName(),fptCustomer.getMiddleName(),
                 fptCustomer.getDateOfBirth(),fptCustomer.getIssuePlace(),fptCustomer.getMaritalStatus(),"Highschool");
         LeadDetailsAppInfoWait leadDetailsAppInfoWait = new LeadDetailsAppInfoWait(driver,customerErrorResponse);
@@ -177,7 +185,7 @@ public class FptAutoNew {
                 break;
             }
         }
-
+        stageError="IDENTIFICATION INFORMATION" ;
         if(leadDetailsAppInfoWait.getCheckBtnProceedHide("IDENTIFICATION INFORMATION", "Check hide/unhide proceed btn")) {
             leadDetailsAppInfoWait.getExpandIdentification("IDENTIFICATION INFORMATION","Click to expand Identification Info").click();
             leadDetailsAppInfoWait.inputIdentification("IDENTIFICATION INFORMATION",identification);
@@ -248,6 +256,7 @@ public class FptAutoNew {
                 address.add(d1);
             }
         }
+            stageError="ADDRESS INFORMATION" ;
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
         leadDetailsAppInfoWait.inputAddress("ADDRESS INFORMATION",address);
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
@@ -293,6 +302,7 @@ public class FptAutoNew {
          * @default: choose "Current Address"
          */
         //region COMMUNICATION INFORMATION
+            stageError="COMMUNICATION INFORMATION" ;
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
         leadDetailsAppInfoWait.getBtnPriAdd("COMMUNICATION INFORMATION","Choose Primary Communication").click();
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
@@ -372,9 +382,10 @@ public class FptAutoNew {
                     fptProductDetail.getGoodType(),fptProductDetail.getQuantity(), fptProductDetail.getGoodPrice()));
 
         }
+        stageError="LEAD DETAILS" ;
         leadDetailsAppInfoWait.btnMiscFpt("LEAD DETAILS", "MISC-FPT");
         LeadDetailsMiscFptWait leadDetailsMiscFptWait = new LeadDetailsMiscFptWait(driver,customerErrorResponse);
-        leadDetailsMiscFptWait.inputFPT("LEAD DETAILS -> MISC-FPT",inputProducts,"0",fptLoanDetail.getDownPayment(),fptCustomer.getEmployeeCard());
+        leadDetailsMiscFptWait.inputFPT("LEAD DETAILS -> MISC-FPT",inputProducts,fptLoanDetail.getDownPayment(),"0",fptCustomer.getEmployeeCard());
         //endregion
         System.out.println(username + " LEAD DETAILS -> MISC-FPT DONE");
 
@@ -484,7 +495,11 @@ public class FptAutoNew {
 //        }
 //        System.out.println("End thread " + AutomationConstant.userId);
         //endregion
-
+        }catch (Exception e)
+        {
+            customerErrorResponse.setField6("FAILED_" + stageError);
+            AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
+        }
 
     }
 }
