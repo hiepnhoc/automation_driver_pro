@@ -224,7 +224,7 @@ public class FptAutoNew {
         for (FptAddress fptaddress : fptAddresses
         ) {
             if(fptaddress.getAddressType().trim().equals("Current Address")) {
-                a1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam",fptaddress.getRegion() //"ALL"//
+                a1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam","ALL" //fptaddress.getRegion() //"ALL"//
                         ,fptaddress.getProvince(),fptaddress.getDistrict(),
                         fptaddress.getAddress1(),fptaddress.getAddress2(), fptaddress.getWard(),fptCustomer.getMap(), fptCustomer.getDurationYear(),
                         fptCustomer.getDurationMonth(),"","",fptCustomer.getMobilePhone());
@@ -232,7 +232,7 @@ public class FptAutoNew {
                 address.add(a1);
             }
             if(fptaddress.getAddressType().trim().equals("Family Book Address")) {
-                b1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam",fptaddress.getRegion() //"ALL"//
+                b1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam","ALL" //fptaddress.getRegion() //"ALL"//
                         ,fptaddress.getProvince(),fptaddress.getDistrict(),
                         fptaddress.getAddress1(),fptaddress.getAddress2(), fptaddress.getWard(),fptCustomer.getMap(), "",
                         "","","","");
@@ -240,7 +240,7 @@ public class FptAutoNew {
                 address.add(b1);
             }
             if(fptaddress.getAddressType().trim().equals("Spouse Address")) {
-                c1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam",fptaddress.getRegion() //"ALL"//
+                c1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam","ALL" //fptaddress.getRegion() //"ALL"//
                         ,fptaddress.getProvince(),fptaddress.getDistrict(),
                         fptaddress.getAddress1(),fptaddress.getAddress2(), fptaddress.getWard(),"", "",
                         "","","","");
@@ -248,7 +248,7 @@ public class FptAutoNew {
                 address.add(c1);
             }
             if(fptaddress.getAddressType().trim().equals("Working Address")) {
-                d1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam",fptaddress.getRegion() //"ALL"//
+                d1 = Arrays.asList(fptaddress.getAddressType(),"Vietnam","ALL" //fptaddress.getRegion() //"ALL"//
                         ,fptaddress.getProvince(),fptaddress.getDistrict(),
                         fptaddress.getAddress1(),fptaddress.getAddress2(), fptaddress.getWard(),"", "",
                         "","","","");
@@ -497,6 +497,7 @@ public class FptAutoNew {
         //endregion
         }catch (Exception e)
         {
+            e.printStackTrace();
             customerErrorResponse.setField6("FAILED_" + stageError);
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
         }
