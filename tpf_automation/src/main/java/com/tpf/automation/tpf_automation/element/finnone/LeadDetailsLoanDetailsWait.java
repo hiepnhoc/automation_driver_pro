@@ -2,11 +2,16 @@ package com.tpf.automation.tpf_automation.element.finnone;
 
 import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import lombok.Getter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 
 import java.util.List;
 
+@Getter
 public class LeadDetailsLoanDetailsWait {
     WebDriver driver;
     CustomerErrorResponse customerErrorResponse;
@@ -14,6 +19,13 @@ public class LeadDetailsLoanDetailsWait {
     WebElement occupationType_chzn;
     WebElement Text_employerName; //company tax code
 
+    @FindBy(how = How.ID, using = "sourcingDetailsLiId")
+    @CacheLookup
+    private WebElement tabSourcingDetailsElement;
+
+    @FindBy(how = How.ID, using = "sourcing")
+    @CacheLookup
+    private WebElement sourcingDetailsDivContainerElement;
 
     public LeadDetailsLoanDetailsWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
         this.driver = driver;

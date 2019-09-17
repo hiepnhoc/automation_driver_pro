@@ -3,6 +3,7 @@ package com.tpf.automation.tpf_automation.element.finnone;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.tpf.automation.tpf_automation.entity.FptIncomeDto;
+import com.tpf.automation.tpf_automation.entity.momo.MomoIncomeDto;
 import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -97,4 +98,47 @@ public class ApplicationInfoFinancialDetailsTab {
     public void saveAndNext() {
         this.btnSaveAndNextElement.click();
     }
+
+    public void setIncomeDetailsDataMomo(List<MomoIncomeDto> datas) throws JsonParseException, JsonMappingException, IOException {
+        int index = 0;
+        for (MomoIncomeDto data : datas) {
+            final int _index = index;
+            await("IncomeDetails Tr container not displayed - Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> trElements.size() > _index);
+
+//			new Select(_driver.findElement(By.id("incomeDetailForm_incomeHead_" + index)))
+//					.selectByVisibleText(data.getIncomeHead());
+//			new Select(_driver.findElement(By.id("incomeDetailForm_frequency_" + index)))
+//					.selectByVisibleText(data.getFrequency());
+
+            WebElement incomeHead = _driver.findElement(By.id("incomeDetailForm_incomeHead_" + index + "_chzn"));
+            incomeHead.click();
+            List<WebElement> incomeHeads = _driver.findElements(By.xpath("//*[contains(@id, 'incomeDetailForm_incomeHead_" + index + "_chzn_o_')]"));
+            for (WebElement element : incomeHeads) {
+                if (element.getText().equals(data.getIncomeHead())) {
+                    element.click();
+                    break;
+                }
+            }
+
+            WebElement frequency = _driver.findElement(By.id("incomeDetailForm_frequency_" + index + "_chzn"));
+            frequency.click();
+            List<WebElement> frequencys = _driver.findElements(By.xpath("//*[contains(@id, 'incomeDetailForm_frequency_" + index + "_chzn_o_')]"));
+            for (WebElement element : frequencys) {
+                if (element.getText().equals(data.getFrequency())) {
+                    element.click();
+                    break;
+                }
+            }
+            _driver.findElement(By.id("amount_incomeDetailForm_amount_" + index)).sendKeys(data.getAmount());
+//            _driver.findElement(By.id("incomeDetailForm_percentageToConsider_" + index)).sendKeys(data.getPercentage());
+            if (index < datas.size() - 1) {
+                await("Btn Add IncomeDetail not enabled - Timeout!").atMost(30, TimeUnit.SECONDS)
+                        .until(() -> btnAddMoreIncomeDtlElement.isEnabled());
+                btnAddMoreIncomeDtlElement.click();
+            }
+            index++;
+        }
+    }
+
 }

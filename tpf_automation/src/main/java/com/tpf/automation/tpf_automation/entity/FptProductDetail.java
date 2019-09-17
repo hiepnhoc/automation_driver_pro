@@ -2,7 +2,7 @@ package com.tpf.automation.tpf_automation.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.omg.CORBA.UNKNOWN;
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FptProductDetail {

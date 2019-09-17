@@ -1,6 +1,7 @@
 package com.tpf.automation.tpf_automation;
 
 import com.tpf.automation.tpf_automation.entity.FptCustomer;
+import com.tpf.automation.tpf_automation.entity.momo.MomoData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,33 @@ public class AutomationConstant {
 
 
     public static List<FptCustomer> customerQueue = new ArrayList<>();
+
+    //--------------------- MOMO ------------------//
+    public static List<List> userIdMomo = new ArrayList<>();
+    public static List<MomoData> customerMomoQueue = new ArrayList<>();
+    private static List<String> userMomo1 = Arrays.asList("momo_auto1","Fpt@12345","false");
+    private static List<String> userMomo2 = Arrays.asList("momo_auto2","Fpt@12345","false");
+    private static List<String> userMomo3 = Arrays.asList("momo_auto3","Fpt@12345","false");
+    private static List<String> userMomo4 = Arrays.asList("momo_auto4","Fpt@12345","false");
+    private static List<String> userMomo5 = Arrays.asList("momo_auto5","Fpt@12345","false");
+    private static List<String> userMomo6 = Arrays.asList("momo_auto6","Fpt@12345","false");
+    private static List<String> userMomo7 = Arrays.asList("momo_auto7","Fpt@12345","false");
+    private static List<String> userMomo8 = Arrays.asList("momo_auto8","Fpt@12345","false");
+    private static List<String> userMomo9 = Arrays.asList("momo_auto9","Fpt@12345","false");
+    private static List<String> userMomo10 = Arrays.asList("momo_auto10","Fpt@12345","false");
+
+    public static void initUserMomo () {
+        userIdMomo.add(userMomo1);
+        userIdMomo.add(userMomo2);
+        userIdMomo.add(userMomo3);
+        userIdMomo.add(userMomo4);
+        userIdMomo.add(userMomo5);
+        userIdMomo.add(userMomo6);
+        userIdMomo.add(userMomo7);
+        userIdMomo.add(userMomo8);
+        userIdMomo.add(userMomo9);
+        userIdMomo.add(userMomo10);
+    }
 
     public static void
     initUser () {

@@ -1,9 +1,11 @@
 package com.tpf.automation.tpf_automation;
 
 import com.tpf.automation.tpf_automation.entity.FptCustomer;
+import com.tpf.automation.tpf_automation.entity.momo.MomoData;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.fpt.FptAutoNew;
 import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
+import com.tpf.automation.tpf_automation.services.MomoAutomationService;
 import com.tpf.automation.tpf_automation.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -195,6 +197,17 @@ public class SeleniumUtils {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HH:mm:ss").format(Calendar.getInstance().getTime());
         String result = username + "_" + timeStamp;
         return result;
+    }
+
+    public static void runMomo(MomoData momoDTO, String username, String password) {
+        MomoAutomationService momoAutomationService = new MomoAutomationService();
+        try {
+            momoAutomationService.runAutomation(momoDTO, username, password);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
