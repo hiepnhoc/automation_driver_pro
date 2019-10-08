@@ -73,6 +73,7 @@ public class FptAutoNew {
             chromeOptions.addArguments("--incognito");
 //            chromeOptions.addArguments("start-maximized");
             chromeOptions.addArguments("window-size=1800x3000");
+            //chromeOptions.addArguments("window-size=1920x1080");
 //            chromeOptions.setCapability("platform", platform);
             //this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
             this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
@@ -256,7 +257,7 @@ public class FptAutoNew {
                 address.add(d1);
             }
         }
-            stageError="ADDRESS INFORMATION" ;
+        stageError="ADDRESS INFORMATION" ;
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
         leadDetailsAppInfoWait.inputAddress("ADDRESS INFORMATION",address);
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
@@ -297,6 +298,7 @@ public class FptAutoNew {
             //endregion
             System.out.println(username + " FAMILY INFORMATION DONE");
         }
+
         /**
          * @detail [Choose primary address for communication ]
          * @default: choose "Current Address"

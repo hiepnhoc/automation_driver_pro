@@ -5,10 +5,19 @@ import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static com.tpf.automation.tpf_automation.AutomationConstant.globalWait;
+import static org.awaitility.Awaitility.await;
 
 public class LeadDetailsAppInfoWait {
     WebDriver driver;
@@ -18,6 +27,9 @@ public class LeadDetailsAppInfoWait {
     WebElement customerMainChildTabs_employment_tab;
     //endregion
 
+    @FindBy(how = How.ID, using = "address_detail_body")
+    @CacheLookup
+    private WebElement addressDivElement;
 
     String selectBoxGender = "genderType_new_chzn";
     String selectOneGender = "dropbox";
@@ -41,8 +53,11 @@ public class LeadDetailsAppInfoWait {
     WebElement btnSavePI;
     WebElement appInfo;
 
+    @FindBy(how = How.ID, using = "create_new")
+    private WebElement btnCreateAnotherElement;
 
     public LeadDetailsAppInfoWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
+        PageFactory.initElements(driver, this);
         this.driver = driver;
         this.customerErrorResponse = customerErrorResponse;
     }
@@ -138,9 +153,16 @@ public class LeadDetailsAppInfoWait {
     }
 
     public void inputAddress(String stage, List<List> test) {
-
+        Actions actions = new Actions(driver);
         for(int i=0;i<test.size();i++) {
             WebDriverWait wait = new WebDriverWait(driver,10);
+
+            await("btnCreateAnotherElement loading timeout").atMost(globalWait, TimeUnit.SECONDS)
+                    .until(() -> btnCreateAnotherElement.isEnabled());
+            actions.moveToElement(btnCreateAnotherElement).click().build().perform();
+
+            await("addressDivElement display Timeout!").atMost(globalWait, TimeUnit.SECONDS)
+                    .until(() -> addressDivElement.isDisplayed());
 
             SeleniumUtils.findByID(driver,customerErrorResponse,"phoneNumberList1_phoneNumber",stage,test.get(i).get(13).toString()).click();
 
