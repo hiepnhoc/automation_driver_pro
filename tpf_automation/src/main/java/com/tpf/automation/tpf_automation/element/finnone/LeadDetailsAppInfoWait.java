@@ -2,6 +2,8 @@ package com.tpf.automation.tpf_automation.element.finnone;
 
 import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import com.tpf.automation.tpf_automation.utils.Utils;
+import lombok.Getter;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import static com.tpf.automation.tpf_automation.AutomationConstant.globalWait;
 import static org.awaitility.Awaitility.await;
 
+@Getter
 public class LeadDetailsAppInfoWait {
     WebDriver driver;
     CustomerErrorResponse customerErrorResponse;
@@ -26,6 +29,16 @@ public class LeadDetailsAppInfoWait {
     //region LEFT TAB CONTROL
     WebElement customerMainChildTabs_employment_tab;
     //endregion
+
+    @FindBy(how = How.CLASS_NAME, using = "DedupeButton")
+    private WebElement btnCheckDuplicateElement;
+
+    @FindBy(how = How.ID, using = "noOfMatchesFound")
+    private WebElement numDuplicateElement;
+
+    @FindBy(how = How.ID, using = "saveAndNextCustFormButton1")
+    @CacheLookup
+    private WebElement saveAndNextElement;
 
     @FindBy(how = How.ID, using = "address_detail_body")
     @CacheLookup
@@ -153,39 +166,39 @@ public class LeadDetailsAppInfoWait {
     }
 
     public void inputAddress(String stage, List<List> test) {
+        Utils.captureScreenShot(driver);
         Actions actions = new Actions(driver);
         for(int i=0;i<test.size();i++) {
-            WebDriverWait wait = new WebDriverWait(driver,10);
-
+            Utils.captureScreenShot(driver);
             await("btnCreateAnotherElement loading timeout").atMost(globalWait, TimeUnit.SECONDS)
                     .until(() -> btnCreateAnotherElement.isEnabled());
             actions.moveToElement(btnCreateAnotherElement).click().build().perform();
-
+            Utils.captureScreenShot(driver);
             await("addressDivElement display Timeout!").atMost(globalWait, TimeUnit.SECONDS)
                     .until(() -> addressDivElement.isDisplayed());
 
             SeleniumUtils.findByID(driver,customerErrorResponse,"phoneNumberList1_phoneNumber",stage,test.get(i).get(13).toString()).click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"addressType_chzn",stage, "click address").click();
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id='addressType_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(i).get(0) + "']", stage, test.get(i).get(0).toString()).click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"text_country_chzn",stage, "click text country").click();
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id='text_country_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(i).get(1) + "']", stage, test.get(i).get(1).toString()).click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"state_country_chzn",stage, "click state country").click();
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id='state_country_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(i).get(2) + "']", stage, "ALL").click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"city_country_chzn",stage, "click city country").click();
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id=\"city_country_chzn\"]/div/div/input", stage, test.get(i).get(3).toString()).sendKeys(test.get(i).get(3).toString());
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id=\"city_country_chzn\"]/div/div/input", stage, test.get(i).get(3).toString()).sendKeys(Keys.ENTER);
 //            SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id='city_country_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(i).get(3) + "']", stage, test.get(i).get(3).toString()).click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"Text_postalCode_country",stage, "postalCode").sendKeys("%%%");
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id=\"listitem_postalCode_country0a\"]/div/div", stage, "default value").click();
 
             SeleniumUtils.findByID(driver,customerErrorResponse,"area_country_chzn",stage, "click area country").click();
             SeleniumUtils.findByXpath(driver, customerErrorResponse, "//*[@id='area_country_chzn']//li[contains(@class, 'active-result') and text() = \"" + test.get(i).get(4).toString() + "\"]", stage, test.get(i).get(4).toString()).click();
-
+            Utils.captureScreenShot(driver);
             SeleniumUtils.findByID(driver,customerErrorResponse,"address1ToBeAddedInput_country",stage,test.get(i).get(5).toString()).sendKeys(test.get(i).get(5).toString());
             SeleniumUtils.findByID(driver,customerErrorResponse,"address2ToBeAdded_country",stage,test.get(i).get(6).toString()).sendKeys(test.get(i).get(6).toString());
             SeleniumUtils.findByID(driver,customerErrorResponse,"address3ToBeAdded_country",stage,test.get(i).get(7).toString()).sendKeys(test.get(i).get(7).toString());
@@ -195,7 +208,7 @@ public class LeadDetailsAppInfoWait {
             SeleniumUtils.findByID(driver,customerErrorResponse,"stdCode_phoneNumberList_new1",stage,test.get(i).get(11).toString()).sendKeys(test.get(i).get(11).toString());
             SeleniumUtils.findByID(driver,customerErrorResponse,"phoneNumber_phoneNumberList_new1",stage,test.get(i).get(12).toString()).sendKeys(test.get(i).get(12).toString());
             SeleniumUtils.findByID(driver,customerErrorResponse,"phoneNumberList1_phoneNumber",stage,test.get(i).get(13).toString()).sendKeys(test.get(i).get(13).toString());
-
+            Utils.captureScreenShot(driver);
             //SeleniumUtils.captureScreenshot(driver,customerErrorResponse);
             SeleniumUtils.findByID(driver,customerErrorResponse,"save_cust_address",stage,"save_address").click();
 
@@ -205,7 +218,10 @@ public class LeadDetailsAppInfoWait {
                 //System.out.println(i);
                 try {
                     Thread.sleep(500);
-                    SeleniumUtils.clickableById(driver,customerErrorResponse,"create_new",stage,"create_new").click();
+                   // SeleniumUtils.clickableById(driver,customerErrorResponse,"create_new",stage,"create_new").click();
+                    await("btnCreateAnotherElement loading timeout").atMost(globalWait, TimeUnit.SECONDS)
+                            .until(() -> btnCreateAnotherElement.isEnabled());
+                    actions.moveToElement(btnCreateAnotherElement).click().build().perform();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

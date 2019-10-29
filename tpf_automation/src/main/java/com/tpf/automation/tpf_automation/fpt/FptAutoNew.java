@@ -7,6 +7,7 @@ import com.tpf.automation.tpf_automation.entity.*;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
 import com.tpf.automation.tpf_automation.utils.Utils;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,6 +18,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +94,9 @@ public class FptAutoNew {
 
 
         //driver.manage().window().maximize();
-        //endregion
+        //endregio
+        Instant start = Instant.now();
+        System.out.println("START=>" + SeleniumUtils.getDateTime(username));
 
         //region LOGIN PAGE
         LoginFptWait loginFptWait = new LoginFptWait(driver,customerErrorResponse);
@@ -103,14 +108,14 @@ public class FptAutoNew {
 
         //region LOAN CREATION
         //region CHOOSE PERSONAL LOAN
-            stageError="MAIN MENU" ;
+        stageError="MAIN MENU" ;
         MainFptWait mainFptWait = new MainFptWait(driver,customerErrorResponse);
         mainFptWait.getMenuApplications("MAIN MENU","Click Open Main Menu").click();
         mainFptWait.getSubmenuPersonalLoan("MAIN MENU", "Click Choose Personal Loan").click();
         //endregion
 
         //region CREATE NEW APPLICATION
-            stageError="CREATE_NEW_PERSONAL_LOAN" ;
+        stageError="CREATE_NEW_PERSONAL_LOAN" ;
         CreatePersonalLoanWait createPersonalLoanWait = new CreatePersonalLoanWait(driver,customerErrorResponse);
         createPersonalLoanWait.getBtnCreateNewCustomer("CREATE_NEW_PERSONAL_LOAN", "CLICK TO CREATE PERSONAL LOAN").click();
         //endregion
@@ -148,7 +153,8 @@ public class FptAutoNew {
         leadDetailsAppInfoWait.getBtnProceed("LEAD_DETAILS__APPLICANT_INFORMATION__PERSONAL_INFORMATION","Click Button Proceed").click();
 
         //endregion
-        System.out.println(username + " BASIC INFORMATION DONE");
+        System.out.println(username + " BASIC INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
         /**
          * @param List<List> identification
          * @x-size 5 [0-4]
@@ -171,7 +177,7 @@ public class FptAutoNew {
 
         List<String> a = Arrays.asList("Current National ID",fptCustomer.getNationalId(),fptCustomer.getIssueDate(),"Vietnam");
         List<String> b = Arrays.asList("Insurance Number",fptCustomer.getEmployeeCard(),"","Vietnam");
-        List<String> c = Arrays.asList("Family Book Number","0","","Vietnam");
+        List<String> c = Arrays.asList("Family Book Number",fptCustomer.getNationalId(),"","Vietnam");
         List<String> d = new ArrayList<>();
 
 
@@ -192,7 +198,8 @@ public class FptAutoNew {
             leadDetailsAppInfoWait.inputIdentification("IDENTIFICATION INFORMATION",identification);
         }
         //endregion
-        System.out.println(username + " IDENTIFICATION INFORMATION DONE");
+        System.out.println(username + " IDENTIFICATION INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         /**
          * @param List<List> address
@@ -257,13 +264,15 @@ public class FptAutoNew {
                 address.add(d1);
             }
         }
+
         stageError="ADDRESS INFORMATION" ;
+        Utils.captureScreenShot(driver);
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
         leadDetailsAppInfoWait.inputAddress("ADDRESS INFORMATION",address);
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
         //endregion
-        System.out.println(username + " ADDRESS INFORMATION DONE");
-
+        System.out.println(username + " ADDRESS INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
         /**
          * @param List<List> family
          * @param String noOfDependents
@@ -296,7 +305,8 @@ public class FptAutoNew {
             //leadDetailsAppInfoWait.getExpandFamily("FAMILY INFORMATION","Click Family").click();
             leadDetailsAppInfoWait.inputFamily(family,"0","0","FAMILY INFORMATION", "click to add");*/
             //endregion
-            System.out.println(username + " FAMILY INFORMATION DONE");
+            System.out.println(username + " FAMILY INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+            Utils.captureScreenShot(driver);
         }
 
         /**
@@ -304,25 +314,50 @@ public class FptAutoNew {
          * @default: choose "Current Address"
          */
         //region COMMUNICATION INFORMATION
-            stageError="COMMUNICATION INFORMATION" ;
+        stageError="COMMUNICATION INFORMATION" ;
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
         leadDetailsAppInfoWait.getBtnPriAdd("COMMUNICATION INFORMATION","Choose Primary Communication").click();
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
         //endregion
-        System.out.println(username + " COMMUNICATION INFORMATION DONE");
+        System.out.println(username + " COMMUNICATION INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
         /**
          * @detail [Mandatory: for moving next stage ]
          * @default: No value
          */
-        //region CHECK DEDUPE
-        System.out.println("Dedupe Start: " + SeleniumUtils.getDateTime(username));
-        leadDetailsAppInfoWait.getBtnCheckDupde("CHECK DEDUPE","check dedupe").click();
-        System.out.println("Dedupe End: " + SeleniumUtils.getDateTime(username));
-        leadDetailsAppInfoWait.getBtnSavePI("SAVE AND NEXT","SAVE AND NEXT").click();
-        //endregion
 
-        //endregion LEAD DETAILS -> APPLICANT INFORMATION -> PERSONAL INFORMATION
-        System.out.println(username + " PERSONAL INFORMATION DONE");
+        //update here
+        // personal infomation tab - button check duplicate
+        Utils.captureScreenShot(driver);
+        System.out.println(username + " APPLICATION INFORMATION PAGE - 1" + SeleniumUtils.getDateTime(username));
+        stageError="APPLICATION INFORMATION PAGE - CHECK DUPLICATE";
+        await("Button check address duplicate not enabled").atMost(30, TimeUnit.SECONDS)
+                .until(() -> leadDetailsAppInfoWait.getBtnCheckDuplicateElement().isEnabled());
+            System.out.println(username + " APPLICATION INFORMATION PAGE - 2" + SeleniumUtils.getDateTime(username));
+        leadDetailsAppInfoWait.getBtnCheckDuplicateElement().click();
+            System.out.println(username + " APPLICATION INFORMATION PAGE - 3" + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
+        await("Button check address duplicate not enabled").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> StringUtils.isNotEmpty(leadDetailsAppInfoWait.getNumDuplicateElement().getText()));
+        System.out.println(username + " APPLICATION INFORMATION PAGE - 4" + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
+        System.out.println("PERSONAL CHECK DUPLICATE: DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
+        System.out.println(username + " APPLICATION INFORMATION PAGE - 4" + SeleniumUtils.getDateTime(username));
+
+//        //region CHECK DEDUPE
+//        System.out.println("Dedupe Start: " + SeleniumUtils.getDateTime(username));
+//        Utils.captureScreenShot(driver);
+//        leadDetailsAppInfoWait.getBtnCheckDupde("CHECK DEDUPE","check dedupe").click();
+//        System.out.println("Dedupe End: " + SeleniumUtils.getDateTime(username));
+//        leadDetailsAppInfoWait.getBtnSavePI("SAVE AND NEXT","SAVE AND NEXT").click();
+//        //endregion//AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
+
+
+            //endregion LEAD DETAILS -> APPLICANT INFORMATION -> PERSONAL INFORMATIO
+        leadDetailsAppInfoWait.getSaveAndNextElement().click();
+        System.out.println(username + " PERSONAL INFORMATION DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         /**
          * @param List<String> empDetails
@@ -344,7 +379,8 @@ public class FptAutoNew {
         leadDetailsEmpDetailsWait.inputStaffMember("EMPLOYMENT DETAILS", empDetails);
 
         //endregion
-        System.out.println(username + " EMPLOYMENT DETAILS DONE");
+        System.out.println(username + " EMPLOYMENT DETAILS DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         //region FINANCE DETAIL
         List<FptIncomeDto> incomeDetailDTOList = new ArrayList<>();
@@ -363,8 +399,8 @@ public class FptAutoNew {
 //        financialDetailsTab.validInOutData(dataControl, applicationInfoValue.get("incomeDetails"));
         financialDetailsTab.saveAndNext();
 
-        System.out.println(username + " EMPLOYMENT DETAILS : FINANCE DONE");
-
+        System.out.println(username + " EMPLOYMENT DETAILS : FINANCE DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
         /**
          * @param List<String> empDetails
          * @size 8 [0-7]
@@ -389,7 +425,8 @@ public class FptAutoNew {
         LeadDetailsMiscFptWait leadDetailsMiscFptWait = new LeadDetailsMiscFptWait(driver,customerErrorResponse);
         leadDetailsMiscFptWait.inputFPT("LEAD DETAILS -> MISC-FPT",inputProducts,fptLoanDetail.getDownPayment(),"0",fptCustomer.getEmployeeCard());
         //endregion
-        System.out.println(username + " LEAD DETAILS -> MISC-FPT DONE");
+        System.out.println(username + " LEAD DETAILS -> MISC-FPT DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         /**
          * @param List<String> testLeadDetailsAppInfo
@@ -411,7 +448,8 @@ public class FptAutoNew {
         LeadDetailsLoanDetailsWait leadDetailsLoanDetailsWait = new LeadDetailsLoanDetailsWait(driver,customerErrorResponse);
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS",testLeadDetailsAppInfo);
         //endregion
-        System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
+        System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
 //        try {
 //            // ==========DOCUMENTS=================
@@ -457,7 +495,8 @@ public class FptAutoNew {
         LeadDetailsReferencesWait leadDetailsReferencesWait = new LeadDetailsReferencesWait(driver,customerErrorResponse);
         leadDetailsReferencesWait.inputReferences("LEAD DETAILS -> REFERENCES",test_ref);
         //endregion
-        System.out.println(username + " LEAD DETAILS -> REFERENCES DONE");
+        System.out.println(username + " LEAD DETAILS -> REFERENCES DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         /**
          * @param List<String> test_dtl
@@ -476,12 +515,14 @@ public class FptAutoNew {
         leadDetailsAppInfoWait.btnMiscAppDtl("LEAD DETAILS", "MISC - FRMAPPDTL");
         LeadDetailsAppDtlWait leadDetailsAppDtlWait = new LeadDetailsAppDtlWait(driver,customerErrorResponse);
         leadDetailsAppDtlWait.inputFrmAppDtl("LEAD DETAILS -> MISC - FRMAPPDTL",test_dtl);
-        System.out.println(username + " LEAD DETAILS -> MISC - FRMPDAPTL DONE");
+        System.out.println(username + " LEAD DETAILS -> MISC - FRMPDAPTL DONE - " + SeleniumUtils.getDateTime(username));
+        Utils.captureScreenShot(driver);
 
         MoveToNextStageFptWait moveToNextStageFptWait = new MoveToNextStageFptWait(driver, customerErrorResponse);
         moveToNextStageFptWait.moveToNextStage(username,"END OF LEAD DETAILS", "MOVE TO NEXT STAGE", customerErrorResponse);
         //endregion
-
+            Instant finish = Instant.now();
+            System.out.println("EXEC: " + Duration.between(start, finish).toMinutes());
         //endregion LOAN CREATION
 
 
@@ -499,6 +540,7 @@ public class FptAutoNew {
         //endregion
         }catch (Exception e)
         {
+            Utils.captureScreenShot(driver);
             e.printStackTrace();
             customerErrorResponse.setField6("FAILED_" + stageError);
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
